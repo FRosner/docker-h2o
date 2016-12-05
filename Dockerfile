@@ -7,7 +7,7 @@ RUN \
   apt-get update -q -y && \
   apt-get dist-upgrade -y && \
   apt-get clean && \
-  rm -rf /var/cache/apt/* 
+  rm -rf /var/cache/apt/*
 
 # Install Oracle Java 7
 RUN \
@@ -17,7 +17,7 @@ RUN \
   echo debconf shared/accepted-oracle-license-v1-1 select true | debconf-set-selections && \
   echo debconf shared/accepted-oracle-license-v1-1 seen true | debconf-set-selections && \
   DEBIAN_FRONTEND=noninteractive apt-get install -y oracle-java7-installer && \
-  apt-get clean 
+  apt-get clean
 
 # Fetch h2o latest_stable
 RUN \
@@ -26,7 +26,7 @@ RUN \
   unzip -d /opt /opt/h2o.zip && \
   rm /opt/h2o.zip && \
   cd /opt && \
-  cd `find . -name 'h2o.jar' | sed 's/.\///;s/\/h2o.jar//g'` && \ 
+  cd `find . -name 'h2o.jar' | sed 's/.\///;s/\/h2o.jar//g'` && \
   cp h2o.jar /opt && \
   /usr/bin/pip install `find . -name "*.whl"` && \
   wget https://raw.githubusercontent.com/h2oai/h2o-3/master/docker/start-h2o-docker.sh
