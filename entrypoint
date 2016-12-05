@@ -1,0 +1,32 @@
+#!/bin/bash
+
+if [ -z "$H2O_GROUP_ID" ] || [ -z "$H2O_USER_ID" ]
+then
+  echo "Please set all required environment variables."
+  exit 1
+fi
+
+# add H2O group if not exists
+H2O_GROUP_NAME="h2o"
+if getent group $H2O_GROUP_NAME; then
+  echo "Group $H2O_GROUP_NAME already exists"
+  exit 1
+else
+  echo "Group $H2O_GROUP_NAME does not exist, creating it with gid=$H2O_GROUP_ID"
+  addgroup --force-badname -gid $H2O_GROUP_ID $H2O_GROUP_NAME
+fi
+
+# add H2O user if not exists
+H2O_USER_NAME="h2o"
+if id -u $H2O_USER_NAME 2>/dev/null; then
+  echo "User $H2O_USER_NAME already exists"
+else
+  echo "User $H2O_USER_NAME does not exist, creating it with uid=$H2O_USER_ID"
+  adduser --force-badname $H2O_USER_NAME --uid $H2O_USER_ID --gecos "" --ingroup $H2O_GROUP_NAME --disabled-login --disabled-password
+fi
+
+H2O_HOME="/opt/h2o*"
+chown -R $H2O_USER_NAME $H2O_HOME
+chown -R $H2O_GROUP_NAME $H2O_HOME
+
+exec sudo -E -u $H2O_USER_NAME "$@"

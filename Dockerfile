@@ -38,4 +38,6 @@ WORKDIR /data
 EXPOSE 54321
 EXPOSE 54322
 
-ENTRYPOINT ["java", "-Xmx4g", "-jar", "/opt/h2o.jar"]
+ADD entrypoint /entrypoint
+
+ENTRYPOINT ["/entrypoint"]
